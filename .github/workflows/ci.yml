@@ -1,22 +1,14 @@
 name: CI
 
-on:
-  push:
-  pull_request:
-    types: [opened, synchronize, reopened, labeled]
+on: [push]
 
 jobs:
   build:
-    # Skip 'labeled' events that didn't add the 'ci' label
-    if: |
-      github.event_name != 'pull_request' ||
-      github.event.action != 'labeled' ||
-      github.event.label.name == 'ci'
     runs-on: ubuntu-latest
     env:
       JVM_OPTS: -Xmx6G
       IS_BUILD_SIGNED: ${{ secrets.KEYSTORE != '' }}
-      UPLOAD_ARTIFACTS: ${{ github.event_name != 'pull_request' || contains(github.event.pull_request.labels.*.name, 'ci') }}
+      UPLOAD_ARTIFACTS: true
       CMAKE_VERSION: "3.22.1"
       NDK_VERSION: "25.0.8775105"
 
